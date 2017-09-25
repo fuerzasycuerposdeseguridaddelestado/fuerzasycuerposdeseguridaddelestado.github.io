@@ -32,17 +32,17 @@ for folder in ${hex_values}; do
   for file in ${hex_values}; do
     ((i=i%N)); ((i++==0)) && wait
     if [ ! -e ${folder}/${file}.db ]; then
-      download_db ${folder}/${file}.db
+      download_db ${folder}/${file}.db &
     elif [ `wc -l ${folder}/${file}.db | awk '{print $1}'` -eq 0 ]; then
       rm -f ${folder}/${file}.db
-      download_db ${folder}/${file}.db
+      download_db ${folder}/${file}.db &
     elif grep "Connection timed out" ${folder}/${file}.db >/dev/null; then
       rm -f ${folder}/${file}.db
-      download_db ${folder}/${file}.db
+      download_db ${folder}/${file}.db &
     elif ! check_md5 ${folder}/${file}.db; then
       echo "Updating file ${folder}/${file}.db ..."
       rm -f ${folder}/${file}.db
-      download_db ${folder}/${file}.db
+      download_db ${folder}/${file}.db &
     fi
     echo
   done
